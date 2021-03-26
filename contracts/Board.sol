@@ -1,0 +1,73 @@
+pragma solidity ^0.7.6;
+pragma abicoder v2;
+
+contract Board {
+    struct Post {
+        uint256 id;
+        address author;
+        string content;
+        uint256 createdAt;
+    }
+
+    mapping(uint256 => Post[]) threads;
+    mapping(uint256 => Post) private posts;
+
+    uint256 private nextThreadId;
+    uint256 private nextPostId;
+
+    function createThread(string calldata _originalPostContent) external {
+        posts[nextPostId] = Post(
+            nextPostId,
+            msg.sender,
+            _originalPostContent,
+            block.timestamp
+        );
+        threads[nextThreadId].push(posts[nextPostId]);
+
+        nextPostId++;
+        nextThreadId++;
+    }
+
+    function postInThread(uint256 threadId, string calldata _content) external {
+        require(threads[threadId].length > 0, "thread does not exist");
+
+        posts[nextPostId] = Post(
+            nextPostId,
+            msg.sender,
+            _content,
+            block.timestamp
+        );
+        threads[threadId].push(posts[nextPostId]);
+
+        nextPostId++;
+    }
+
+    function getPostsInThread(uint256 threadId)
+        external
+        view
+        returns (Post[] memory)
+    {
+        uint256 threadLength = threads[threadId].length;
+        require(threadLength > 0, "empty thread");
+
+        Post[] memory _posts = new Post[](threadLength);
+        for (uint256 i = 0; i < threadLength; i++) {
+            Post storage _post = posts[i];
+            _posts[i] = Post(
+                _post.id,
+                _post.author,
+                _post.content,
+                _post.createdAt
+            );
+        }
+        return _posts;
+    }
+
+    function getPostCount() external view returns (uint256) {
+        return nextPostId;
+    }
+
+    function getThreadCount() external view returns (uint256) {
+        return nextThreadId;
+    }
+}
