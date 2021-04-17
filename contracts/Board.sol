@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.7.6;
 pragma abicoder v2;
 
@@ -9,8 +11,8 @@ contract Board {
         uint256 createdAt;
     }
 
-    mapping(uint256 => Post[]) threads;
-    mapping(uint256 => Post) private posts;
+    mapping(uint256 => Post[]) public threads;
+    mapping(uint256 => Post) public posts;
 
     uint256 private nextThreadId;
     uint256 private nextPostId;
@@ -69,5 +71,9 @@ contract Board {
 
     function getThreadCount() external view returns (uint256) {
         return nextThreadId;
+    }
+
+    function postCountOf(uint256 threadId) external view returns(uint256) {
+        return threads[threadId].length;
     }
 }
