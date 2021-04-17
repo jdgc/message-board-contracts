@@ -12,7 +12,6 @@ describe("Board", function() {
     Board = await ethers.getContractFactory("Board");
   });
   
-
   describe("createThread", function() {
     it("should create a thread", async function() {
       const board = await Board.deploy();
