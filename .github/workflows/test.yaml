@@ -1,0 +1,26 @@
+name: test
+
+on:
+  push:
+    branches: '*'
+  pull_request:
+    branches: '*'
+
+jobs:
+  hardhat:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: checkout github repository
+        uses: actions/checkout@v2
+
+      - name: set up node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      
+      - name: npm install 
+        run: npm install
+
+      - name: hardhat test
+        run: npx hardhat test
