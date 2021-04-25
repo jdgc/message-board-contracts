@@ -9,7 +9,7 @@ createThread(string) // text for original post content
 postInThread(uint256, string) // threadId and post content
 ```
 
-A minimal frontend example can be found [here](https://github.com/jdgc/evm-message-board-example)
+A minimal frontend example running on polygon can be found [here](https://github.com/jdgc/evm-message-board-example)
 
 ## What is has now
 For now, not much. But the contract as is can:
