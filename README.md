@@ -1,4 +1,3 @@
-# board-contracts
 This is a quick proof of concept for a minimal censorship resistant message board dapp on EVM chains.
 
 ## Frontends
