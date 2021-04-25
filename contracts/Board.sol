@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.7.6;
-pragma abicoder v2;
+pragma solidity ^0.8.3;
 
 contract Board {
     struct Post {
         uint256 id;
+        uint256 threadId;
         address author;
         string content;
         uint256 createdAt;
@@ -17,14 +17,26 @@ contract Board {
     uint256 private nextThreadId;
     uint256 private nextPostId;
 
+    event NewThread(
+        uint256 id,
+        Post originalPost
+    );
+
+    event NewPost(
+        Post post 
+    );
+
     function createThread(string calldata _originalPostContent) external {
         posts[nextPostId] = Post(
             nextPostId,
+            nextThreadId,
             msg.sender,
             _originalPostContent,
             block.timestamp
         );
         threads[nextThreadId].push(posts[nextPostId]);
+
+        emit NewThread(nextThreadId, posts[nextPostId]);
 
         nextPostId++;
         nextThreadId++;
@@ -35,11 +47,14 @@ contract Board {
 
         posts[nextPostId] = Post(
             nextPostId,
+            threadId,
             msg.sender,
             _content,
             block.timestamp
         );
         threads[threadId].push(posts[nextPostId]);
+
+        emit NewPost(posts[nextPostId]);
 
         nextPostId++;
     }
@@ -54,9 +69,10 @@ contract Board {
 
         Post[] memory _posts = new Post[](threadLength);
         for (uint256 i = 0; i < threadLength; i++) {
-            Post storage _post = posts[i];
+            Post storage _post = threads[threadId][i];
             _posts[i] = Post(
                 _post.id,
+                _post.threadId,
                 _post.author,
                 _post.content,
                 _post.createdAt
